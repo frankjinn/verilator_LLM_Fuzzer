@@ -515,9 +515,9 @@ if test "$CFG_ENABLE_PARTIAL_STATIC" = "yes"; then
   _MY_LDLIBS_CHECK_OPT(CFG_LDFLAGS_SRC, -static-libgcc)
   _MY_LDLIBS_CHECK_OPT(CFG_LDFLAGS_SRC, -static-libstdc++)
   _MY_LDLIBS_CHECK_OPT(CFG_LDFLAGS_SRC, -Xlinker -gc-sections)
-  LTCMALLOC=-l:libtcmalloc_minimal.a
+  LTCMALLOC=-lgcov -l:libtcmalloc_minimal.a
 else
-  LTCMALLOC=-ltcmalloc_minimal
+  LTCMALLOC=-lgcov -ltcmalloc_minimal
 fi
 AC_SUBST(CFG_LDFLAGS_SRC)
 AC_SUBST(CFG_LDFLAGS_VERILATED)
@@ -525,7 +525,7 @@ AC_SUBST(CFG_LDFLAGS_VERILATED)
 # The pthread library is required by tcmalloc, so add it if it exists. If it
 # does not, the tcmalloc check below will fail anyway, and linking against
 # pthreads is harmless otherwise.
-CFG_LIBS="$LIBS $CFG_LIBS"
+CFG_LIBS="$LIBS $CFG_LIBS -lgcov"
 _MY_LDLIBS_CHECK_OPT(CFG_LIBS, -lpthread)
 _MY_LDLIBS_CHECK_OPT(CFG_LIBS, -latomic)
 
