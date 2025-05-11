@@ -47,7 +47,10 @@ verilator_coverage_bin*
 /test_regress/snapshot/
 xmverilog.*
 xrun.history
-verilator/coverage_reports/
+
+# Coverage reports
+/coverage_reports/
+**/coverage_reports/
 
 # Normal CMake build directory
 /build
