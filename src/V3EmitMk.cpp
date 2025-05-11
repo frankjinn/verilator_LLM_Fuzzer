@@ -762,7 +762,7 @@ public:
             // let default rule depend on '{prefix}__ALL.a', for compatibility
             of.puts(v3Global.opt.exeName()
                     + ": $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)\n");
-            of.puts("\t$(LINK) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LIBS) $(SC_LIBS) -o $@\n");
+            of.puts("\t$(LINK) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LIBS) $(SC_LIBS) -o $@ -lgcov\n");
             of.puts("\n");
         } else if (!v3Global.opt.libCreate().empty()) {
             const string libCreateDeps = "$(VK_OBJS) $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) "
@@ -782,10 +782,10 @@ public:
                 // So add dynamic_lookup
                 of.puts("ifeq ($(shell uname -s),Darwin)\n");
                 of.puts("\t$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -undefined "
-                        "dynamic_lookup -shared -flat_namespace -o $@ $^\n");
+                        "dynamic_lookup -shared -flat_namespace -o $@ -lgcov $^\n");
                 of.puts("else\n");
                 of.puts(
-                    "\t$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -shared -o $@ $^\n");
+                    "\t$(OBJCACHE) $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(OPT_FAST) -shared -o $@ -lgcov $^\n");
                 of.puts("endif\n");
                 of.puts("\n");
                 of.puts("lib" + v3Global.opt.libCreate() + ": " + v3Global.opt.libCreateName(false)
