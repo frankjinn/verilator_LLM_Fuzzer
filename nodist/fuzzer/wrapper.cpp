@@ -23,5 +23,5 @@
 int main(int argc, char** argv, char** envp) {
     auto r = system("rm -rf obj_dir");
     assert(r == 0);
-    return execve("../../bin/verilator_bin", argv, envp);
+    return execve("/verilator/bin/verilator", argv, envp);
 }

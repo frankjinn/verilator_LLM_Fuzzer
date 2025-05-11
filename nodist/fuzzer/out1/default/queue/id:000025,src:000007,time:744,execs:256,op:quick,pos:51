@@ -1,0 +1,5 @@
+module e(
+   logic a
+);
+assign D = a;
+endmodule

@@ -1,0 +1,27 @@
+/* v*/
+
+module uest;  reg [3:0] index;
+   reg [3:0] a, b;
+    reg result;
+     initial begin // ues
+case (a) 4'b10x0: $display("ch");
+    endcase
+     casez (a)  default: $display();
+    endcase
+ // Ts
+    end
+     // Coing
+always @(posedge result) begin
+    #5 a[index] <= 1'b1;   end
+   always_comb begin   if (index > 0) begin
+    end
+    end
+     // Moues
+parameter P_x;
+    localparam LP= 4'bx1x0;
+ endmodule
+
+// Ade)
+class XTest;
+bit [3:0] x_0;
+endclass
