@@ -1,16 +1,11 @@
 module reloop_test;
-  // Arrays for testing
   reg [7:0] array1[0:63];
   reg [7:0] array2[0:63];
   reg [7:0] array3[0:63];
   reg [31:0] big_array[0:127];
-  
-  // Vector for testing
   reg [63:0] vector1;
   reg [63:0] vector2;
-  
   initial begin
-    // Case 1: Sequential assignments to array elements (should be converted to a loop)
     array1[0] = 8'h10;
     array1[1] = 8'h11;
     array1[2] = 8'h12;
@@ -27,8 +22,6 @@ module reloop_test;
     array1[13] = 8'h1D;
     array1[14] = 8'h1E;
     array1[15] = 8'h1F;
-    
-    // Case 2: Array to array assignments with positive offset (should be converted to a loop)
     array2[0] = array1[5];
     array2[1] = array1[6];
     array2[2] = array1[7];
@@ -40,8 +33,6 @@ module reloop_test;
     array2[8] = array1[13];
     array2[9] = array1[14];
     array2[10] = array1[15];
-    
-    // Case 3: Array to array assignments with negative offset
     array3[10] = array3[5];
     array3[11] = array3[6];
     array3[12] = array3[7];
@@ -52,21 +43,14 @@ module reloop_test;
     array3[17] = array3[12];
     array3[18] = array3[13];
     array3[19] = array3[14];
-    
-    // Case 4: Non-sequential assignments (should not be converted)
     big_array[0] = 32'h00000001;
     big_array[2] = 32'h00000002;
     big_array[4] = 32'h00000003;
-    
-    // Case 5: Sequential assignments interleaved with other statements (should not be converted)
     array1[20] = 8'h20;
     $display("Interleaved statement");
     array1[21] = 8'h21;
     $display("Another interleaved statement");
     array1[22] = 8'h22;
-    
-    // Case 6: Large sequential assignment to test the reloop limit
-    // This should be converted if v3Global.opt.reloopLimit() is smaller than 32
     big_array[32] = 32'hAA000000;
     big_array[33] = 32'hAA000001;
     big_array[34] = 32'hAA000002;
@@ -99,8 +83,6 @@ module reloop_test;
     big_array[61] = 32'hAA00001D;
     big_array[62] = 32'hAA00001E;
     big_array[63] = 32'hAA00001F;
-    
-    // Case 7: Constant assignments to vector bits (should be converted)
     vector1[0] = 1'b0;
     vector1[1] = 1'b1;
     vector1[2] = 1'b0;
@@ -111,8 +93,6 @@ module reloop_test;
     vector1[7] = 1'b1;
     vector1[8] = 1'b0;
     vector1[9] = 1'b1;
-    
-    // Case 8: Copy one vector to another with offset
     vector2[0] = vector1[5];
     vector2[1] = vector1[6];
     vector2[2] = vector1[7];
@@ -123,8 +103,6 @@ module reloop_test;
     vector2[7] = vector1[12];
     vector2[8] = vector1[13];
     vector2[9] = vector1[14];
-    
-    // Display results to prevent optimization removal
     $display("Test complete");
   end
 endmodule
