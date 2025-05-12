@@ -5,8 +5,8 @@
 #include <cassert>
 
 int main(int argc, char** argv, char** envp) {
-    // Use direct unlink calls instead of system() for faster directory removal
-    unlink("obj_dir");
+    int r = system("rm -rf obj_dir");
+    assert(r == 0);
 
     pid_t pid = vfork(); // Use vfork() instead of fork() for better performance
     if (pid == -1) {
