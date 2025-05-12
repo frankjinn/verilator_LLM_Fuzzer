@@ -1,8 +1,8 @@
 # environment variables:
 AFL_CUSTOM_INFO_PROGRAM=./wrapper
-AFL_CUSTOM_INFO_PROGRAM_ARGV=--cc @@
+AFL_CUSTOM_INFO_PROGRAM_ARGV=--cc --timing --quiet --Wno-lint --Wno-fatal @@
 AFL_CUSTOM_INFO_OUT=out1/default
 AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 AFL_SKIP_CPUFREQ=1
 # command line:
-'afl-fuzz' '-i' 'in1' '-o' 'out1' '-x' 'dictionary' './wrapper' '--cc' '@@'
+'afl-fuzz' '-i' 'in1' '-o' 'out1' '-x' 'dictionary' './wrapper' '--cc' '--timing' '--quiet' '--Wno-lint' '--Wno-fatal' '@@'

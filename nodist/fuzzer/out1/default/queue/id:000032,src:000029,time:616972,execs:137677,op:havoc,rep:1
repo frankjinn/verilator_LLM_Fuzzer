@@ -1,9 +1,0 @@
-/* v*/
-
-module uest;  reg [3:0] x;
-   reg [3:0] a, b;
-    reg rex0;
- endmodule
-
-class  x_0;
-endclass

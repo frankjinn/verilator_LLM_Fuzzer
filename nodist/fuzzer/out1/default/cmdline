@@ -1,3 +1,7 @@
 ./wrapper
 --cc
+--timing
+--quiet
+--Wno-lint
+--Wno-fatal
 @@

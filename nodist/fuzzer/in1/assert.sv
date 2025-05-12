@@ -74,23 +74,12 @@ module assertion_test (
         $warning("Warning message");
         $error("Error message (just for testing)");
     end
-    initial begin
-        $monitor("Monitoring: data_in=%h, counter=%h", data_in, counter);
-        $strobe("Strobed values: data_in=%h, counter=%h", data_in, counter);
-        #10 $monitoroff;
-        #20 $monitoron;
-    end
     reg [3:0] data_in_sampled;
     always @(posedge clk) begin
         data_in_sampled <= data_in;
         if (data_in_sampled != data_in) begin
             $display("Data changed during this cycle");
         end
-    end
-    initial begin
-        $display("Assertions would be controlled here");
-        #10;
-        $display("Assertions would be enabled here");
     end
     always @(posedge clk) begin
         assert (data_in <= 4'b1110);

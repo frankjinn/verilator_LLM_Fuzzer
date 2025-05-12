@@ -17,7 +17,7 @@ module top (
   function n(input [7:0] in_val);
     return in_val;
   endfunction
-  sub_module sub (
+  sub_mcdule sub (
   .data_in(dan),
 .data_out(isar)
   );
