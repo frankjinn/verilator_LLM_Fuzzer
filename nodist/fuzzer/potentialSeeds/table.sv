@@ -4,12 +4,9 @@ module table_comb (
     output logic [15:0] out_result,
     output logic [3:0] out_status
 );
-    // Complex combinational always block that should convert to a table
-    // Has many instructions relative to input/output bits
     always @(*) begin
         out_result = 0;
         out_status = 0;
-        
         case (in_control)
             4'h0: begin
                 if (in_data < 8'd10) begin
@@ -44,29 +41,23 @@ module table_comb (
                     out_status = 4'hA;
                 end
             end
-            
             4'h1: begin
-                // Path where not all outputs are assigned
                 if (in_data[0]) begin
                     out_result = in_data << 4;
                     out_status = 4'h1;
                 end else if (in_data[1]) begin
                     out_result = in_data << 3;
-                    // out_status not assigned in this path
                 end else if (in_data[2]) begin
                     out_result = in_data << 2;
                     out_status = 4'h3;
                 end else if (in_data[3]) begin
                     out_result = in_data << 1;
-                    // out_status not assigned in this path
                 end else begin
                     out_result = in_data;
                     out_status = 4'h5;
                 end
             end
-            
             4'h2: begin
-                // More complex operations
                 case (in_data[3:0])
                     4'h0: out_result = 16'h1111;
                     4'h1: out_result = 16'h2222;
@@ -85,7 +76,6 @@ module table_comb (
                     4'hE: out_result = 16'hFFFF;
                     4'hF: out_result = 16'h0000;
                 endcase
-                
                 case (in_data[7:4])
                     4'h0: out_status = 4'h0;
                     4'h1: out_status = 4'h1;
@@ -105,9 +95,7 @@ module table_comb (
                     4'hF: out_status = 4'hF;
                 endcase
             end
-            
             default: begin
-                // Complex nested if-else to create more instructions
                 if (in_data[0] & in_data[1]) begin
                     out_result = 16'h1234;
                     out_status = 4'h1;
@@ -137,7 +125,6 @@ module table_comb (
         endcase
     end
 endmodule
-
 module table_seq (
     input logic clk,
     input logic rst_n,
@@ -146,7 +133,6 @@ module table_seq (
     output logic [15:0] out_result,
     output logic [3:0] out_status
 );
-    // State machine with lots of states - good candidate for table conversion
     typedef enum logic [3:0] {
         IDLE = 4'h0,
         STATE1 = 4'h1,
@@ -165,10 +151,7 @@ module table_seq (
         STATEE = 4'hE,
         STATEF = 4'hF
     } state_t;
-    
     state_t state, next_state;
-    
-    // Sequential block for state register
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
@@ -176,13 +159,9 @@ module table_seq (
             state <= next_state;
         end
     end
-    
-    // Next state and output logic - good table candidate
     always @(posedge clk) begin
-        // Default values
         out_result <= 16'h0000;
         out_status <= 4'h0;
-        
         case (state)
             IDLE: begin
                 if (in_control == 3'h0) begin
@@ -195,10 +174,8 @@ module table_seq (
                     out_status <= 4'h2;
                 end else begin
                     next_state <= IDLE;
-                    // Default values used
                 end
             end
-            
             STATE1: begin
                 if (in_data < 8'd50) begin
                     next_state <= STATE3;
@@ -210,7 +187,6 @@ module table_seq (
                     out_status <= 4'h4;
                 end
             end
-            
             STATE2: begin
                 if (in_data[0]) begin
                     next_state <= STATE5;
@@ -226,52 +202,43 @@ module table_seq (
                     out_status <= 4'h7;
                 end else begin
                     next_state <= IDLE;
-                    // out_status not assigned in this path
                 end
             end
-            
             STATE3: begin
                 next_state <= STATE8;
                 out_result <= 16'h8888;
                 out_status <= 4'h8;
             end
-            
             STATE4: begin
                 next_state <= STATE9;
                 out_result <= 16'h9999;
                 out_status <= 4'h9;
             end
-            
             STATE5: begin
                 next_state <= STATEA;
                 out_result <= 16'hAAAA;
                 out_status <= 4'hA;
             end
-            
             STATE6: begin
                 next_state <= STATEB;
                 out_result <= 16'hBBBB;
                 out_status <= 4'hB;
             end
-            
             STATE7: begin
                 next_state <= STATEC;
                 out_result <= 16'hCCCC;
                 out_status <= 4'hC;
             end
-            
             STATE8, STATE9: begin
                 next_state <= STATED;
                 out_result <= 16'hDDDD;
                 out_status <= 4'hD;
             end
-            
             STATEA, STATEB, STATEC: begin
                 next_state <= STATEE;
                 out_result <= 16'hEEEE;
                 out_status <= 4'hE;
             end
-            
             default: begin
                 next_state <= IDLE;
                 out_result <= 16'hFFFF;
@@ -280,8 +247,6 @@ module table_seq (
         endcase
     end
 endmodule
-
-// Top module that instantiates both table candidates
 module table_top (
     input logic clk,
     input logic rst_n,
@@ -292,15 +257,12 @@ module table_top (
     output logic [15:0] seq_result,
     output logic [3:0] seq_status
 );
-    // Instantiate combinational module
     table_comb u_comb (
         .in_data(in_data),
         .in_control(in_control[3:0]),
         .out_result(comb_result),
         .out_status(comb_status)
     );
-    
-    // Instantiate sequential module
     table_seq u_seq (
         .clk(clk),
         .rst_n(rst_n),
