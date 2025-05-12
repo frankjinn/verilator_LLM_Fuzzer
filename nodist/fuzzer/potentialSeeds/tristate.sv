@@ -65,7 +65,32 @@ module tristate_top;
     assign mb_tri = net_with_z[0] ? 4'bzzzz : 4'b1010;
     assign mb_tri = net_with_z[1] ? 4'b0101 : 4'bzzzz;
     wire [3:0] nested_z = net_with_z & (t_bus | 4'bz00z);
-    
+    initial begin
+        #10;
+        $display("t0 = %b", t0);
+        $display("t1 = %b", t1);
+        $display("t_plain = %b", t_plain);
+        $display("t_bus = %b", t_bus);
+        $display("multi_drive = %b", multi_drive);
+        $display("asym_drive = %b", asym_drive);
+        $display("eq_result1 = %b", eq_result1);
+        $display("eq_result4 = %b", eq_result4);
+        $display("w_or = %b", w_or);
+        $display("w_and = %b", w_and);
+        $display("count_result = %d", count_result);
+        $display("count_bits_result = %d", count_bits_result);
+        $display("tri_and_z = %b", tri_and_z);
+        $display("tri_or_z = %b", tri_or_z);
+        $display("cond_result1 = %b", cond_result1);
+        $display("cond_z_result = %b", cond_z_result);
+        $display("concat_tri = %b", concat_tri);
+        $display("sel_tri = %b", sel_tri);
+        $display("slice_tri = %b", slice_tri);
+        $display("ext_z = %b", ext_z);
+        $display("edge_tri = %b", edge_tri);
+        $display("mb_tri = %b", mb_tri);
+        $display("nested_z = %b", nested_z);
+    end
 endmodule
 module submodule(
     inout wire io_pin,

@@ -1,6 +1,5 @@
-eodule e(
+module e(
    logic a,
-    output logic b
-);
+    output logic b	);
 assign b = a;
 endmodule

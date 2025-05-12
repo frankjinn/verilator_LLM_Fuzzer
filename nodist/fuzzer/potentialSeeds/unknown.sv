@@ -43,12 +43,10 @@ module unknown_test;
     end
     wire [4:0] w_xconst = 5'bx_1_x;
     wire [7:0] w_array_value = my_array[index];
-    
     always @(posedge result) begin
-        a[index] <= 1'b1;
-        my_array[index] <= 8'hFF;
+        #5 a[index] <= 1'b1;
+        #10 my_array[index] <= 8'hFF;
     end
-    
     always_comb begin
         if (index > 0) begin
             my_array[20] = 8'hFF;
@@ -57,18 +55,15 @@ module unknown_test;
             my_array[0] = 8'h00;
         end
     end
-    
     reg [7:0] mod_idx;
     always_comb begin
         mod_idx = index % 8;
         my_array[mod_idx] = 8'h42;
         my_array[index % 15] = 8'h24;
     end
-    
     parameter P_WITH_X = 8'b1010_1x1x;
     localparam LP_WITH_X = 4'bx1x0;
 endmodule
-
 class XTest;
     bit [3:0] x_val = 4'bx1x0;
 endclass

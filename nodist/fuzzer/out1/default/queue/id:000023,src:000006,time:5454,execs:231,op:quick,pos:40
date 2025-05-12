@@ -1,0 +1,5 @@
+module e(
+   logic a,
+    output logic bn);
+assign b = a;
+endmodule

@@ -7,9 +7,7 @@ module threadpool_test_top;
   logic rst_n = 0;
   logic [WIDTH-1:0] data_in[MODULES];
   logic [WIDTH-1:0] results[MODULES];
-  
-  always clk = ~clk;
-  
+  always #5 clk = ~clk;
   genvar i;
   generate
     for (i = 0; i < MODULES; i++) begin : gen_modules
@@ -25,34 +23,35 @@ module threadpool_test_top;
       );
     end
   endgenerate
-
   initial begin
     for (int i = 0; i < MODULES; i++) begin
       data_in[i] = i;
     end
     rst_n = 0;
-    rst_n = 1;
+    #20 rst_n = 1;
+    #1000;
     for (int i = 0; i < MODULES; i++) begin
       $display("Module %0d result: %h", i, results[i]);
     end
     $finish;
   end
-
   initial begin
     fork
       begin
+        #100;
         $display("Thread 1 executing");
       end
       begin
+        #110;
         $display("Thread 2 executing");
       end
       begin
+        #120;
         $display("Thread 3 executing");
       end
     join
   end
 endmodule
-
 module complex_module #(
   parameter int MODULE_ID = 0,
   parameter int WIDTH = 64,

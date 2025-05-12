@@ -1,6 +1,0 @@
-module e(
-   logic a,
-    output logic b
-);
-assign bI= a;
-endmodule

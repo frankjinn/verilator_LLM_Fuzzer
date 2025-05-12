@@ -53,5 +53,5 @@ module undriven_test;
     end
   endgenerate
   logic clk = 0;
-  always clk = ~clk;
+  always #5 clk = ~clk;
 endmodule

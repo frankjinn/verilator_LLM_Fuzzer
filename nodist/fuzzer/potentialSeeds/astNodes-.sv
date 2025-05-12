@@ -41,6 +41,7 @@ module top(input clk, input [7:0] in, output reg [7:0] out);
     output [7:0] out_data;
     begin
       out_data = in_data ^ 8'hFF;
+      #1;
     end
   endtask
   function [7:0] invert;
@@ -54,7 +55,7 @@ module top(input clk, input [7:0] in, output reg [7:0] out);
     queue_var.push_back(123);
     struct_var = '{r:8'hFF, g:8'h00, b:8'h00};
     fork
-      logic_var = 8'h55;
+      #10 logic_var = 8'h55;
     join_none
   end
   always @(posedge clk) begin
