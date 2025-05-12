@@ -1,49 +1,38 @@
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <array>
 #include <cstdlib>
+#include <cstdio>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <cassert>
 
-std::string exec(const char* cmd) {
-    std::array<char, 128> buffer;
-    std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-    if (!pipe) {
-        throw std::runtime_error("popen() failed!");
-    }
-    while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) != nullptr) {
-        result += buffer.data();
-    }
-    return result;
-}
+int main(int argc, char** argv, char** envp) {
+    int r = system("rm -rf obj_dir");
+    assert(r == 0); // Ensure the command executed successfully
 
-int main(int argc, char** argv, char** /*envp*/) {
-    auto r = system("rm -rf obj_dir");
-    assert(r == 0);
-
-    // Build command string from argv
-    std::string cmd = "/verilator/bin/verilator --lint-only";  // Only check syntax
-    for (int i = 1; i < argc; i++) {
-        cmd += " ";
-        cmd += argv[i];
-    }
-
-    try {
-        // Run verilator and capture output
-        std::string output = exec(cmd.c_str());
-        
-        // Check for syntax error indicators in output
-        if (output.find("Error:") != std::string::npos || 
-            output.find("Syntax error") != std::string::npos) {
-            return 1;  // Tell AFL this input is invalid
+    pid_t pid = fork();
+    if (pid == -1) {
+        perror("fork failed");
+        abort(); // Crash on fork failure
+    } else if (pid == 0) {
+        // Child process
+        execve("/verilator/bin/verilator", argv, envp);
+        // If execve fails, exit with 42
+        perror("execve failed");
+        _exit(42);
+    } else {
+        // Parent process
+        int status;
+        if (waitpid(pid, &status, 0) == -1) {
+            perror("waitpid failed");
+            abort(); // Crash on wait failure
         }
-        
-        return 0;  // Syntactically valid input
-    }
-    catch (const std::runtime_error& e) {
-        return 2;  // Actual crash or system error
+
+        if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+            // Child exited with code 0 → treat as success (non-crash)
+            return 0;
+        } else {
+            // Any error in child → treat as crash
+            fprintf(stderr, "[!] Child failed with status %d\n", status);
+            abort();
+        }
     }
 }
